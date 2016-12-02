@@ -9,7 +9,6 @@ import java.util.regex.*;
  * Created by Sean Deneen on 12/1/16.
  * Find the distance traveled to get to the HQ.
  */
-@SuppressWarnings("unused")
 public class AdventDay1Part1 implements Advent {
 
     private final Pattern DIR_PATTERN = Pattern.compile("(?<dir>L|R)(?<num>\\d+)");
