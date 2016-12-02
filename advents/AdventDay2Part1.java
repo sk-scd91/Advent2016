@@ -1,6 +1,7 @@
 package com.skscd91.advent2016.advents;
 
 import java.io.BufferedReader;
+import java.util.stream.Collectors;
 
 /**
  * Created by Sean Deneen on 12/2/16.
@@ -11,7 +12,7 @@ public class AdventDay2Part1 implements Advent {
     private int keypadWidth;
     private int keypadPosition;
 
-    private void nextKey(int direction) {
+    protected void nextKey(int direction) {
         switch (direction) {
             case 'U':
                 if (keypadPosition >= keypadWidth)
@@ -32,18 +33,25 @@ public class AdventDay2Part1 implements Advent {
         }
     }
 
+    protected String getKeyChar() {
+        return String.valueOf(keypadPosition + 1);
+    }
+
+    protected final String getKeycode(BufferedReader input) {
+        return input.lines()
+                .map(directions -> {
+                    directions.chars().forEachOrdered(this::nextKey);
+                    return getKeyChar();
+                })
+                .collect(Collectors.joining());
+    }
+
     @Override
     public String compute(BufferedReader input) {
         keypadWidth = 3;
         keypadPosition = (keypadWidth * keypadWidth) / 2;
 
-        String keycode = input.lines()
-                .peek(directions -> directions.chars().forEachOrdered(this::nextKey))
-                .mapToInt(ignored -> keypadPosition + 1)
-                .collect(StringBuilder::new,
-                        StringBuilder::append,
-                        StringBuilder::append)
-                .toString();
+        String keycode = getKeycode(input);
 
         return "The bathroom code is: " + keycode;
     }
