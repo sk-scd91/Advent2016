@@ -36,13 +36,13 @@ public class AdventDay4Part1 implements Advent {
     protected Stream<Matcher> getRoomStream(BufferedReader input) {
         return input.lines()
                 .map(ROOM_PATTERN::matcher)
-                .filter(Matcher::matches);
+                .filter(Matcher::matches)
+                .filter(this::isRealRoom);
     }
 
     @Override
     public String compute(BufferedReader input) {
         long sum = getRoomStream(input)
-                .filter(this::isRealRoom)
                 .mapToLong(matcher -> Long.parseLong(matcher.group("id")))
                 .sum();
 

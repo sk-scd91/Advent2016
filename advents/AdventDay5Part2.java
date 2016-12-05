@@ -19,10 +19,9 @@ public class AdventDay5Part2 extends AdventDay5Part1 {
 
         interestingHashes(doorID)
                 .filter(h -> h[2] < 8 && password.charAt(h[2]) == '_') // Make sure index is in bounds and not set.
+                .limit(8L)
                 .map(h -> password.replace(h[2], h[2] + 1, Integer.toHexString((h[3] & 0xff) >> 4)))
-                .peek(System.out::println)
-                .anyMatch(pass -> pass.indexOf("_") < 0);
-
+                .forEach(System.out::println);
 
         return "The password was found.";
     }
