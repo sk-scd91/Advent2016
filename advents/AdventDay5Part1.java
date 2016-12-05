@@ -7,6 +7,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Created by Sean Deneen on 12/5/16.
@@ -24,7 +25,7 @@ public class AdventDay5Part1 implements Advent {
         }
     }
 
-    protected byte[] md5(String code) {
+    private byte[] md5(String code) {
         DIGEST.reset();
         return DIGEST.digest(code.getBytes());
     }
@@ -34,17 +35,23 @@ public class AdventDay5Part1 implements Advent {
         return hash[0] == 0 && hash[1] == 0 && (hash[2] & 0xf0) == 0;
     }
 
+
+    protected Stream<byte[]> interestingHashes(String doorID) {
+        return IntStream.rangeClosed(0, Integer.MAX_VALUE)
+                .mapToObj(i -> md5(doorID + i))
+                .filter(this::isPasswordHash);
+    }
+
     @Override
     public String compute(BufferedReader input) {
         String doorID = IOUtils.readLineSilently(input);
 
-        String password = IntStream.rangeClosed(0, Integer.MAX_VALUE)
-                .mapToObj(i -> md5(doorID + i))
-                .filter(this::isPasswordHash)
+        String password = interestingHashes(doorID)
                 .limit(8L)
                 .map(h -> Integer.toString(h[2], 16))
                 .collect(Collectors.joining());
 
         return "The password is: " + password;
     }
+
 }
