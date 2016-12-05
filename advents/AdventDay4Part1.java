@@ -1,10 +1,10 @@
 package com.skscd91.advent2016.advents;
 
 import java.io.BufferedReader;
-import java.util.Comparator;
 import java.util.Map;
 import java.util.regex.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by Sean Deneen on 12/4/16.
@@ -33,11 +33,15 @@ public class AdventDay4Part1 implements Advent {
         return roomMatcher.group("checksum").equals(compChecksum);
     }
 
+    protected Stream<Matcher> getRoomStream(BufferedReader input) {
+        return input.lines()
+                .map(ROOM_PATTERN::matcher)
+                .filter(Matcher::matches);
+    }
+
     @Override
     public String compute(BufferedReader input) {
-        long sum = input.lines()
-                .map(ROOM_PATTERN::matcher)
-                .filter(Matcher::matches)
+        long sum = getRoomStream(input)
                 .filter(this::isRealRoom)
                 .mapToLong(matcher -> Long.parseLong(matcher.group("id")))
                 .sum();
