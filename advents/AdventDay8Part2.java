@@ -14,9 +14,8 @@ public class AdventDay8Part2 extends AdventDay8Part1 {
         super.compute(input);
 
         String screenDisplay = Arrays.stream(screen)
-                .mapToObj(line -> Long.toBinaryString(Long.reverse((line << 1) | 1L)))
-                .map(bString -> bString.substring(1).replace('0', ' ').replace('1', 'x'))
-                .map(pString -> String.join(" ", pString.split("(?<=\\G.{5})")))
+                .mapToObj(line -> Long.toBinaryString(Long.reverse((line << 1) | 1L))) // Extra bit to maintain column.
+                .map(bString -> bString.substring(1).replace('0', ' ').replace('1', 'X')) // Replace binary with pixels.
                 .collect(Collectors.joining("\n"));
 
         return "The display: \n" + screenDisplay;
