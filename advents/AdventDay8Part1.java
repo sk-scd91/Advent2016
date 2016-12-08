@@ -6,7 +6,7 @@ import java.util.regex.*;
 
 /**
  * Created by Sean Deneen on 12/8/16.
- * Count the pixels on the display after following the commands
+ * Count the pixels on the display after following the commands.
  */
 public class AdventDay8Part1 implements Advent {
 
@@ -14,11 +14,11 @@ public class AdventDay8Part1 implements Advent {
     private final Pattern ROTATE_PATTERN = Pattern.compile("rotate (?<type>row y|column x)="
             + "(?<line>\\d+) by (?<shift>\\d+)");
 
-    private static final long WIDTH = 50L;
-    private static final int HEIGHT = 6;
+    protected static final long WIDTH = 50L;
+    protected static final int HEIGHT = 6;
     private static final long COLUMN_MASK = (1L << WIDTH) - 1;
 
-    private final long[] screen = new long[HEIGHT];
+    protected final long[] screen = new long[HEIGHT];
 
     private boolean fillRect(String instruction) {
         Matcher rectMatcher = RECT_PATTERN.matcher(instruction);
