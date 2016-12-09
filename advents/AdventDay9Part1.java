@@ -24,14 +24,23 @@ public class AdventDay9Part1 implements Advent {
             int reps = Integer.parseInt(messageMatcher.group("reps"));
 
             messageBuilder.append(compressedMessage, startIndex, messageMatcher.start());
-            Collections.nCopies(reps, compressedMessage.substring(end, end + length))
-                    .forEach(messageBuilder::append);
+            repeat(compressedMessage.substring(end, end + length), messageBuilder, reps);
             startIndex = end + length;
         }
 
         startIndex = Math.min(startIndex, compressedMessage.length());
         return messageBuilder.append(compressedMessage, startIndex, compressedMessage.length())
                 .toString();
+    }
+
+    /**
+     * Decompresses a non-literal cluster.
+     * @param cluster The string cluster to decompress.
+     * @param output The StringBuilder to output the decompressed value.
+     * @param reps The number of times to repeat the cluster.
+     */
+    protected void repeat(String cluster, StringBuilder output, int reps) {
+        Collections.nCopies(reps, cluster).forEach(output::append);
     }
 
     @Override
