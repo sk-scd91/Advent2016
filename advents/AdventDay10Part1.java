@@ -73,6 +73,7 @@ public class AdventDay10Part1 implements Advent {
 
     @Override
     public String compute(BufferedReader input) {
+        foundIndex = -1;
 
         runBots(input)
                 .anyMatch(str -> foundIndex >= 0);
@@ -82,7 +83,6 @@ public class AdventDay10Part1 implements Advent {
 
     protected final Stream<String> runBots(BufferedReader input) {
         bots = new HashMap<>();
-        foundIndex = -1;
         return input.lines()
                 .filter(inst -> matchValue(inst) || matchGive(inst));
     }
