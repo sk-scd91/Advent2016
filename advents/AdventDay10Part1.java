@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.IntConsumer;
 import java.util.regex.*;
+import java.util.stream.Stream;
 
 /**
  * Created by Sean Deneen on 12/10/16.
@@ -72,14 +73,18 @@ public class AdventDay10Part1 implements Advent {
 
     @Override
     public String compute(BufferedReader input) {
-        bots = new HashMap<>();
-        foundIndex = -1;
 
-        input.lines()
-                .filter(inst -> matchValue(inst) || matchGive(inst))
+        runBots(input)
                 .anyMatch(str -> foundIndex >= 0);
 
         return "The bot is " + foundIndex;
+    }
+
+    protected final Stream<String> runBots(BufferedReader input) {
+        bots = new HashMap<>();
+        foundIndex = -1;
+        return input.lines()
+                .filter(inst -> matchValue(inst) || matchGive(inst));
     }
 
     protected class Bot {
