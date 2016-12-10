@@ -12,10 +12,12 @@ import java.util.regex.*;
  */
 public class AdventDay9Part1 implements Advent {
 
-    protected String decompress(String compressedMessage) {
-        Matcher messageMatcher = Pattern.compile("\\((?<length>\\d+)x(?<reps>\\d+)\\)")
-                .matcher(compressedMessage);
-        StringBuilder messageBuilder = new StringBuilder();
+    private final Pattern RUN_PATTERN = Pattern.compile("\\((?<length>\\d+)x(?<reps>\\d+)\\)");
+
+    private StringBuilder messageBuilder;
+
+    protected void decompress(String compressedMessage) {
+        Matcher messageMatcher = RUN_PATTERN.matcher(compressedMessage);
         int startIndex = 0;
 
         while(messageMatcher.find(startIndex)) {
@@ -23,32 +25,40 @@ public class AdventDay9Part1 implements Advent {
             int length = Integer.parseInt(messageMatcher.group("length"));
             int reps = Integer.parseInt(messageMatcher.group("reps"));
 
-            messageBuilder.append(compressedMessage, startIndex, messageMatcher.start());
-            repeat(compressedMessage.substring(end, end + length), messageBuilder, reps);
+            append(compressedMessage, startIndex, messageMatcher.start());
+            repeat(compressedMessage.substring(end, end + length), reps);
             startIndex = end + length;
         }
 
         startIndex = Math.min(startIndex, compressedMessage.length());
-        return messageBuilder.append(compressedMessage, startIndex, compressedMessage.length())
-                .toString();
+        append(compressedMessage, startIndex, compressedMessage.length());
+    }
+
+    protected void append(String str, int start, int end) {
+        messageBuilder.append(str, start, end);
     }
 
     /**
      * Decompresses a non-literal cluster.
      * @param cluster The string cluster to decompress.
-     * @param output The StringBuilder to output the decompressed value.
      * @param reps The number of times to repeat the cluster.
      */
-    protected void repeat(String cluster, StringBuilder output, int reps) {
-        Collections.nCopies(reps, cluster).forEach(output::append);
+    protected void repeat(String cluster, int reps) {
+        Collections.nCopies(reps, cluster).forEach(messageBuilder::append);
+    }
+
+    protected long decompressionLength(String compressedMessage) {
+        messageBuilder = new StringBuilder(compressedMessage.length());
+        decompress(compressedMessage);
+        return (long)messageBuilder.length();
     }
 
     @Override
     public String compute(BufferedReader input) {
         String compressedMessage = IOUtils.readLineSilently(input);
 
-        String message = decompress(compressedMessage);
+        long messageLength = decompressionLength(compressedMessage);
 
-        return "The length of the message is " + message.length();
+        return "The length of the message is " + messageLength;
     }
 }
