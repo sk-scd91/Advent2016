@@ -17,9 +17,9 @@ public class AdventDay11Part1 implements Advent {
     private final Pattern FLOOR_CONTAINS = Pattern.compile("The (?<floor>[a-z]+) floor contains ");
     private final Pattern EQUIP_PATTERN = Pattern.compile("an? (?<element>[a-z]+)(?<type> generator|-compatible microchip)");
 
-    private final List<Set<String>> initialGenerators = new ArrayList<>(Collections.nCopies(4, null));
-    private final List<Set<String>> initialMicrochips = new ArrayList<>(Collections.nCopies(4, null));
-    private List<String> allElements;
+    protected final List<Set<String>> initialGenerators = new ArrayList<>(Collections.nCopies(4, null));
+    protected final List<Set<String>> initialMicrochips = new ArrayList<>(Collections.nCopies(4, null));
+    protected List<String> allElements;
     private Set<BitSet> previousStates;
 
     private Deque<BooleanSupplier> searches;
@@ -140,7 +140,7 @@ public class AdventDay11Part1 implements Advent {
         minSteps = -1;
         allElements = new ArrayList<>();
 
-        input.lines().forEachOrdered(this::parseInstruction);
+        parseInput(input);
 
         searches = new ArrayDeque<>();
         searches.add(() -> searchMin(0, 0, initialGenerators, initialMicrochips));
@@ -151,5 +151,9 @@ public class AdventDay11Part1 implements Advent {
             ;
 
         return "It takes " + minSteps + " steps.";
+    }
+
+    protected void parseInput(BufferedReader input) {
+        input.lines().forEachOrdered(this::parseInstruction);
     }
 }
