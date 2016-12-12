@@ -52,7 +52,7 @@ public class AdventDay11Part1 implements Advent {
     }
 
     // Step 2: Use bfs to find minimum steps to complete task.
-    private boolean searchMin(int steps, int floor, List<Set<String>> generators, List<Set<String>> microchips) {
+    protected boolean searchMin(int steps, int floor, List<Set<String>> generators, List<Set<String>> microchips) {
         if (generators.get(generators.size() - 1).size() == allElements.size()
                 && microchips.get(microchips.size() - 1).size() == allElements.size()) {
             minSteps = steps;
@@ -108,7 +108,7 @@ public class AdventDay11Part1 implements Advent {
             if (isSafeMove(generatorsWithFirst.get(floorFrom), microchipsWithFirst.get(floorFrom))
                     && isSafeMove(generatorsWithFirst.get(floorTo), microchipsWithFirst.get(floorTo))
                     && notSearched(floorTo, generatorsWithFirst, microchipsWithFirst))
-                searches.add(() -> searchMin(steps, floorTo, generatorsWithFirst, microchipsWithFirst));
+                addSearch(steps, floorTo, generatorsWithFirst, microchipsWithFirst);
             for (int j = i + 1; j < floorEquipment.length; j++) {
                 final List<Set<String>> nextGenerators = cloneFloors(floorFrom, floorTo,
                         (j < genSize) ? floorEquipment[j] : null, generatorsWithFirst);
@@ -117,7 +117,7 @@ public class AdventDay11Part1 implements Advent {
                 if (isSafeMove(nextGenerators.get(floorFrom), nextMicrochips.get(floorFrom))
                         && isSafeMove(nextGenerators.get(floorTo), nextMicrochips.get(floorTo))
                         && notSearched(floorTo, nextGenerators, nextMicrochips))
-                    searches.add(() -> searchMin(steps, floorTo, nextGenerators, nextMicrochips));
+                    addSearch(steps, floorTo, nextGenerators, nextMicrochips);
             }
         }
     }
@@ -142,12 +142,12 @@ public class AdventDay11Part1 implements Advent {
 
         parseInput(input);
 
-        searches = new ArrayDeque<>();
-        searches.add(() -> searchMin(0, 0, initialGenerators, initialMicrochips));
+        initSearches();
+        addSearch(0, 0, initialGenerators, initialMicrochips);
         previousStates = new HashSet<>();
         notSearched(0, initialGenerators, initialMicrochips);
 
-        while (!searches.isEmpty() && !searches.removeFirst().getAsBoolean())
+        while (continueSearch())
             ;
 
         return "It takes " + minSteps + " steps.";
@@ -156,4 +156,17 @@ public class AdventDay11Part1 implements Advent {
     protected void parseInput(BufferedReader input) {
         input.lines().forEachOrdered(this::parseInstruction);
     }
+
+    protected void initSearches() {
+        searches = new ArrayDeque<>();
+    }
+
+    protected void addSearch(int steps, int floor, List<Set<String>> generators, List<Set<String>> microchips) {
+        searches.add(() -> searchMin(steps, floor, generators, microchips));
+    }
+
+    protected boolean continueSearch() {
+        return (!searches.isEmpty() && !searches.removeFirst().getAsBoolean());
+    }
+
 }
