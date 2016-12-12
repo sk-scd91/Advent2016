@@ -12,8 +12,8 @@ import java.util.function.IntUnaryOperator;
  */
 public class AdventDay12Part1 implements Advent {
 
-    private static final String regNames = "abcd";
-    private int[] regs = new int[regNames.length()];
+    protected static final String regNames = "abcd";
+    protected int[] regs = new int[regNames.length()];
     private List<IntUnaryOperator> compiledInstructions;
 
     // Step 1: Assemble
@@ -97,12 +97,16 @@ public class AdventDay12Part1 implements Advent {
 
     @Override
     public String compute(BufferedReader input) {
-        Arrays.fill(regs, 0);
-        compiledInstructions = new ArrayList<>();
+        initRegistersAndInstructions();
 
         input.lines().forEachOrdered(this::assemble);
         run();
 
-        return "The value of register a is " + regs[0];
+        return "The value of register a is " + regs[regNames.indexOf('a')];
+    }
+
+    protected void initRegistersAndInstructions() {
+        Arrays.fill(regs, 0);
+        compiledInstructions = new ArrayList<>();
     }
 }
