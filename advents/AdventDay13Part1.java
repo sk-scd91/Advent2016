@@ -18,13 +18,14 @@ public class AdventDay13Part1 implements Advent {
     private Deque<BooleanSupplier> searches;
     private int pathLength;
 
+    // Generates a wall based on if the formula below has an odd number of bits.
     private boolean isWall(int x, int y) {
         return Integer.bitCount(x*x + 3*x + 2*x*y + y + y*y + FAVORITE_NUMBER) % 2 == 1;
     }
 
     private boolean canPassThrough(List<BitSet> maze, int x, int y) {
-        if(!getCoordinate(maze, 2 * x + 1, y)) {
-            setCoordinate(maze, 2 * x + 1, y);
+        if(!getCoordinate(maze, 2 * x + 1, y)) { // If location hasn't been memoized yet.
+            setCoordinate(maze, 2 * x + 1, y); // Set as memoized
             boolean isWall = isWall(x, y);
             if (isWall)
                 setCoordinate(maze, 2 * x, y);
@@ -33,18 +34,19 @@ public class AdventDay13Part1 implements Advent {
         return !getCoordinate(maze, 2 * x, y);
     }
 
-    private void setCoordinate(List<BitSet> maze, int x, int y) {
+    protected void setCoordinate(List<BitSet> maze, int x, int y) {
         while (y >= maze.size())
             maze.add(new BitSet(x));
         maze.get(y).set(x);
     }
 
-    private boolean getCoordinate(List<BitSet> maze, int x, int y) {
+    protected boolean getCoordinate(List<BitSet> maze, int x, int y) {
         while (y >= maze.size())
             maze.add(new BitSet(x));
         return maze.get(y).get(x);
     }
 
+    // Clones the elements of the path grid that will be modified later.
     private List<BitSet> clonePath(List<BitSet> path, int y) {
         List<BitSet> copy = new ArrayList<>(path);
         copy.set(y, (BitSet)copy.get(y).clone());
@@ -52,13 +54,11 @@ public class AdventDay13Part1 implements Advent {
     }
 
     private boolean searchPath(int x, int y, List<BitSet> maze, List<BitSet> path) {
-        if (x == DEST_X && y == DEST_Y) {
-            pathLength = path.stream().mapToInt(BitSet::cardinality).sum();
+        if (shouldStopSearch(x, y, path))
             return true;
-        }
 
-        setCoordinate(path, x, y);
-        if (!getCoordinate(path, x + 1, y) && canPassThrough(maze, x + 1, y)) {
+        setCoordinate(path, x, y); // Set current location.
+        if (!getCoordinate(path, x + 1, y) && canPassThrough(maze, x + 1, y)) { // If not visited and not wall.
             final List<BitSet> pathCopy = clonePath(path, y);
             searches.add(() -> searchPath(x + 1, y, maze, pathCopy));
         }
@@ -78,16 +78,28 @@ public class AdventDay13Part1 implements Advent {
         return false;
     }
 
+    protected boolean shouldStopSearch(int x, int y, List<BitSet> path) {
+        if (x == DEST_X && y == DEST_Y) {
+            pathLength = path.stream().mapToInt(BitSet::cardinality).sum();
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public String compute(BufferedReader input) {
-        searches = new ArrayDeque<>();
         pathLength = -1;
 
+        runSearch();
+
+        return "It takes at least " + pathLength + " steps to reach the coordinate.";
+    }
+
+    protected void runSearch() {
+        searches = new ArrayDeque<>();
         searches.add(() -> searchPath(1, 1, new ArrayList<>(), new ArrayList<>()));
 
         while (!searches.isEmpty() && !searches.removeFirst().getAsBoolean())
             ;
-
-        return "It takes at least " + pathLength + " steps to reach the coordinate.";
     }
 }
