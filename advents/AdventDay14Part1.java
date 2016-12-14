@@ -24,10 +24,9 @@ public class AdventDay14Part1 implements Advent {
     private MessageDigest md5Digest;
     private List<List<Integer>> potentialKeyIndices;
 
-    private String generateHash(int index) {
+    protected String generateHash(String message) {
         md5Digest.reset();
-        String digestable = SALT + index;
-        byte[] hash = md5Digest.digest(digestable.getBytes());
+        byte[] hash = md5Digest.digest(message.getBytes());
         String result =  new java.math.BigInteger(1, hash).toString(16); // Generate hex representation.
         // Left pad with 0.
         int padLength = (hash.length * 2) - result.length();
@@ -36,8 +35,13 @@ public class AdventDay14Part1 implements Advent {
         return new String(padding) + result;
     }
 
+    protected String generateHashForIndex(int index) {
+        String message = SALT + index;
+        return generateHash(message);
+    }
+
     private boolean storePotentialKeys(int index) {
-        String hash = generateHash(index);
+        String hash = generateHashForIndex(index);
         Matcher potentialKeyMatcher = IS_POTENTIAL_KEY.matcher(hash);
         if (potentialKeyMatcher.find()) {
             int tripletHex = Integer.parseInt(potentialKeyMatcher.group(1),16);
@@ -48,7 +52,7 @@ public class AdventDay14Part1 implements Advent {
     }
 
     private Stream<Integer> getIndicesOfQualifiedKeys(int index) {
-        return Stream.of(generateHash(index))
+        return Stream.of(generateHashForIndex(index))
                 .map(IS_KEY_QUALIFIER::matcher)
                 .filter(Matcher::find)
                 .flatMap(matcher -> {
