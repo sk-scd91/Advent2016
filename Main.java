@@ -34,6 +34,7 @@ public class Main {
 
             System.out.println("For " + adventName + ":");
 
+            long startTime = System.currentTimeMillis();
             try (FileReader fileReader = new FileReader("Day" + day)) {
                 System.out.println(advent.compute(new BufferedReader(fileReader)));
             } catch (FileNotFoundException e) {
@@ -41,6 +42,8 @@ public class Main {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            long dTime = System.currentTimeMillis() - startTime;
+            System.out.println("Ran for " + dTime + "ms\n");
         }
 
     }
