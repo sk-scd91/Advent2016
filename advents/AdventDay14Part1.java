@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 
 /**
  * Created by Sean Deneen on 12/14/16.
+ * Find the index that generates the 64th key.
  */
 public class AdventDay14Part1 implements Advent {
 
