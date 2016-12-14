@@ -59,7 +59,7 @@ public class AdventDay14Part1 implements Advent {
                 .flatMap(matcher -> {
                     int quintHex = Integer.parseInt(matcher.group(1), 16);
                     int indexLimit = index - 1000;
-                    potentialKeyIndices.get(quintHex).removeIf(i -> i < indexLimit);
+                    potentialKeyIndices.forEach(c -> c.removeIf(i -> i < indexLimit));
                     return potentialKeyIndices.get(quintHex).stream();
                 })
                 .filter(i -> i != index);
