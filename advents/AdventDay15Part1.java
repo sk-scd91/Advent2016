@@ -3,6 +3,7 @@ package com.skscd91.advent2016.advents;
 import java.io.BufferedReader;
 import java.util.regex.*;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Created by Sean Deneen on 12/15/16.
@@ -47,13 +48,13 @@ public class AdventDay15Part1 implements Advent {
         return discTower;
     }
 
+    protected int getTimeGap(Stream<int[]> streamOfDiscs) {
+        return streamOfDiscs.reduce(new int[]{1, 0}, this::combineDiscs)[POS_GAP];
+    }
+
     @Override
     public String compute(BufferedReader input) {
-        int[] discTower = input.lines()
-                .map(this::parseArrangement)
-                .reduce(new int[]{1, 0}, this::combineDiscs);
-
-        int timeGap = discTower[POS_GAP];
+        int timeGap = getTimeGap(input.lines().map(this::parseArrangement));
 
         return "The best time to launch is " + timeGap + " seconds.";
     }
