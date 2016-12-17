@@ -16,7 +16,7 @@ public class AdventDay17Part1 implements Advent {
     private static final String PASSCODE = "pgflpeqp";
     private static final int GRID_WIDTH = 4;
 
-    private Deque<BooleanSupplier> searches;
+    protected Deque<BooleanSupplier> searches;
     protected String minPath;
 
     private MessageDigest initDigest() {
@@ -27,7 +27,7 @@ public class AdventDay17Part1 implements Advent {
         return digest;
     }
 
-    protected MessageDigest cloneDigest(MessageDigest digest) {
+    private MessageDigest cloneDigest(MessageDigest digest) {
         try {
             return (MessageDigest) digest.clone();
         } catch (CloneNotSupportedException e) {
