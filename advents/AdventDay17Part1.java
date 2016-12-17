@@ -17,7 +17,7 @@ public class AdventDay17Part1 implements Advent {
     private static final int GRID_WIDTH = 4;
 
     private Deque<BooleanSupplier> searches;
-    private String minPath;
+    protected String minPath;
 
     private MessageDigest initDigest() {
         MessageDigest digest = null;
@@ -66,6 +66,19 @@ public class AdventDay17Part1 implements Advent {
 
     @Override
     public String compute(BufferedReader input) {
+        startSearch();
+
+        while (continueSearch())
+            ;
+
+        return "The minimum path is " + minPath;
+    }
+
+    protected boolean continueSearch() {
+        return !searches.isEmpty() && !searches.removeFirst().getAsBoolean();
+    }
+
+    protected void startSearch() {
         MessageDigest initialDigest = initDigest();
         initialDigest.reset();
         initialDigest.update(PASSCODE.getBytes());
@@ -73,10 +86,5 @@ public class AdventDay17Part1 implements Advent {
         searches = new ArrayDeque<>();
 
         searches.add(() -> nextStep(initialDigest, "", 0, 0));
-
-        while (!searches.isEmpty() && !searches.removeFirst().getAsBoolean())
-            ;
-
-        return "The minimum path is " + minPath;
     }
 }
