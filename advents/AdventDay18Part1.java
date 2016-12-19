@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 
 /**
  * Created by Sean Deneen on 12/18/16.
- * Find the number of tiles in a room that are not traps, using a 1D cellular automata.
+ * Find the number of tiles in a 40 tile high room that are not traps, using a 1D cellular automata.
  */
 public class AdventDay18Part1 implements Advent {
 
@@ -42,13 +42,17 @@ public class AdventDay18Part1 implements Advent {
                 .collect(Collectors.joining());
     }
 
+    protected long getRoomHeight() {
+        return 40L;
+    }
+
     @Override
     public String compute(BufferedReader input) {
         rule = getTrapRule();
 
         long count = Stream.iterate(IOUtils.readLineSilently(input),
                 this::generateNextLine)
-                .limit(40L)
+                .limit(getRoomHeight())
                 .peek(System.out::println)
                 .flatMapToInt(String::chars)
                 .filter(c -> c == SAFE_TILE)
