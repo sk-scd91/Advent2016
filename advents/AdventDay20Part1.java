@@ -53,13 +53,17 @@ public class AdventDay20Part1 implements Advent {
 
     @Override
     public String compute(BufferedReader input) {
-        List<IPRange> ranges = input.lines()
-                .map(IPRange::new)
-                .sorted()
-                .collect(Collectors.toList());
+        List<IPRange> ranges = getListOfIPRanges(input);
 
         long ip = getLowestIP(ranges);
 
         return "The lowest IP Address not blocked is: " + ip;
+    }
+
+    protected List<IPRange> getListOfIPRanges(BufferedReader input) {
+        return input.lines()
+                .map(IPRange::new)
+                .sorted()
+                .collect(Collectors.toList());
     }
 }
