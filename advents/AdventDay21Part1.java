@@ -10,9 +10,9 @@ import java.util.regex.*;
  */
 public class AdventDay21Part1 implements Advent {
 
-    private static final String PASSWORD = "abcdefgh";
+    protected static final String PASSWORD = "abcdefgh";
 
-    protected enum InstructionMatchers {
+    private enum InstructionMatchers {
         SWAP_POS (Pattern.compile("swap position (?<x>\\d+) with position (?<y>\\d+)")),
         SWAP_CHAR(Pattern.compile("swap letter (?<x>[a-z]) with letter (?<y>[a-z])")),
         ROTATE_STEPS(Pattern.compile("rotate (?<dir>left|right) (?<x>\\d+) steps?")),
@@ -74,7 +74,7 @@ public class AdventDay21Part1 implements Advent {
         scrambler.insert(y, t);
     }
 
-    private void execInstruction(String instruction) {
+    protected void execInstruction(String instruction) {
         for (InstructionMatchers iMatcher : InstructionMatchers.values()) {
             Matcher matcher = iMatcher.matcher(instruction);
             if (matcher.matches()) {
@@ -109,12 +109,20 @@ public class AdventDay21Part1 implements Advent {
 
     @Override
     public String compute(BufferedReader input) {
-        scrambler = new StringBuilder(PASSWORD);
+        setScrambler(PASSWORD);
 
         input.lines().forEachOrdered(this::execInstruction);
 
-        String scrambled = scrambler.toString();
+        String scrambled = getScrambledResult();
 
         return "The scrambled message is " + scrambled;
+    }
+
+    protected void setScrambler(String password) {
+        scrambler = new StringBuilder(password);
+    }
+
+    protected String getScrambledResult() {
+        return scrambler.toString();
     }
 }
