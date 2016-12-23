@@ -2,6 +2,7 @@ package com.skscd91.advent2016.advents;
 
 import java.io.BufferedReader;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -35,13 +36,15 @@ public class AdventDay22Part1 implements Advent {
                 .collect(Collectors.toList());
     }
 
-    protected Stream<String> getViablePairs(List<Node> nodes) {
+    protected Stream<Node[]> getViablePairs(List<Node> nodes) {
         return nodes.stream()
+                .filter(Objects::nonNull)
                 .filter(node -> node.used != 0)
                 .flatMap(a -> nodes.stream()
+                        .filter(Objects::nonNull)
                         .filter(b -> (a.x != b.x || a.y != b.y)
                                 && a.canFitIn(b))
-                        .map(b -> a.pairString() + "," + b.pairString()));
+                        .map(b -> new Node[]{a, b}));
     }
 
     @Override
@@ -68,10 +71,6 @@ public class AdventDay22Part1 implements Advent {
 
         public boolean canFitIn(Node o) {
             return used <= o.avail;
-        }
-
-        public String pairString() {
-            return "(" + x + "," + y + ")";
         }
 
     }
