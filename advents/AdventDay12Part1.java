@@ -14,10 +14,10 @@ public class AdventDay12Part1 implements Advent {
 
     protected static final String regNames = "abcd";
     protected int[] regs = new int[regNames.length()];
-    private List<IntUnaryOperator> compiledInstructions;
+    protected List<IntUnaryOperator> compiledInstructions;
 
     // Step 1: Assemble
-    private IntUnaryOperator assemble(String instruction) {
+    protected IntUnaryOperator assemble(String instruction) {
         String[] parts = instruction.split(" ");
         if (parts.length == 2) {
             final int regX = regNames.indexOf(parts[1]);
@@ -87,7 +87,7 @@ public class AdventDay12Part1 implements Advent {
     }
 
     // Step 2: Run
-    private void run() {
+    protected void run() {
         int pc = 0, len = compiledInstructions.size();
         while (pc < len)
             pc = compiledInstructions.get(pc).applyAsInt(pc);
