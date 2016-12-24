@@ -51,15 +51,15 @@ public class AdventDay24Part1 implements Advent {
         return false;
     }
 
-    // Find the coordinate where character c is located.
-    private int[] findCoordinateFor(char c) {
-        int x, y;
-        for(y = 1; y < maze.length - 1; y++) {
-            x = maze[y].indexOf(c);
-            if (x >= 0)
-                return new int[]{x, y};
+    // Find the coordinates where all the digits are located.
+    private int[][] findCoordinatesFor(int count) {
+        int[][] coords = new int[count][];
+        for(int y = 1; y < maze.length - 1; y++) { // Skip borders.
+            for (int x = maze[y].length() - 2; x > 0; x--)
+                if (Character.isDigit(maze[y].charAt(x)))
+                    coords[(int)maze[y].charAt(x) & 0xf] = new int[]{x, y};
         }
-        return null;
+        return coords;
     }
 
     @Override
@@ -74,9 +74,7 @@ public class AdventDay24Part1 implements Advent {
 
         distances = new int[count][count];
 
-        int[][] coords = IntStream.range(0, count)
-                .mapToObj(i -> findCoordinateFor((char)(i + '0')))
-                .toArray(int[][]::new);
+        int[][] coords = findCoordinatesFor(count);
         performBfs(coords);
 
         System.out.println("Performing sums...");
