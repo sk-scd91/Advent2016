@@ -28,9 +28,10 @@ public class AdventDay24Part1 implements Advent {
             int tile = i;
             if (closest[tile] == 0 || !points.get(origin * count + tile))
                 continue; // Skip if the tile has not been visited or the minimum distance is already reached.
-            System.out.println("Found: " + origin + "->" + tile); // Display result in case search is slow.
             // When two paths overlap, add the distance to the other tile with the distance from origin.
             distances[origin][tile] = distances[tile][origin] = steps + closest[tile] - 1;
+            System.out.println("Found: " + origin + "->" + tile + ": "
+                    + distances[origin][tile]); // Display result in case search is slow.
             points.clear(origin * count + tile); // Mark origin->tile as reached.
             points.clear(tile * count + origin);
             if (points.isEmpty()) { // All points have been visited.
